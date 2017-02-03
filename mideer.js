@@ -1,5 +1,7 @@
+"use strict";
+
 var express = require('express');
-var util = require('util');
+// var util = require('util');
 var hbs  = require('express-handlebars').create({defaultLayout: 'main'});
 
 
@@ -10,14 +12,27 @@ app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'));
 
+app.use((req, res, next) => {
+  console.log('query test: ' + req.query.test);
+  res.locals.showTests = app.get('env') !== 'production' && req.query.test === '1';
+  next();
+});
+
+
 app.get('/', (req, res) => {
-  res.render('home', {data: 'this is extra data'})
-})
+  res.render('home', {data: 'this is extra data'});
+});
+
+app.get('/about', (req, res) => {
+  res.render('about', {
+    data: 'About',
+    pageTestScript: '/qa/tests-about.js'});
+});
 
 app.use((req, res) => {
   res.status(404);
   res.render('404');
-})
+});
 
 // app.use((err, req, res, next) => {
 //   console.error('500 error stack: ');
@@ -29,4 +44,4 @@ app.use((req, res) => {
 //
 app.listen(app.get('port'), () => {
   console.log('Express started on http://localhost: ' + app.get('port') + '; press Ctrl-C to terminate');
-})
+});
