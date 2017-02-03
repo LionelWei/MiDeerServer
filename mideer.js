@@ -1,23 +1,16 @@
 var express = require('express');
 var util = require('util');
+var hbs  = require('express-handlebars').create({defaultLayout: 'main'});
+
 
 var app = express();
 app.set('port', process.env.PORT || 3000);
 
-app.get('/*', (req, res) => {
-  let headers = util.inspect(req.headers)
-  console.log('headers: ' + headers);
-  console.log('params: ' + util.inspect(req.params));
-  res.type('text/html')
-  res.status(200);
-  res.write(headers);
-  res.end('<h1>Mideer</h1> <h2>gallery</h2>')
-})
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars')
 
-app.get('/about', (req, res) => {
-  res.type('text/html')
-  res.status(200);
-  res.send('<h1>Mideer about</h1>')
+app.get('/', (req, res) => {
+  res.render('home')
 })
 
 app.use((req, res) => {
@@ -27,7 +20,8 @@ app.use((req, res) => {
 })
 
 app.use((err, req, res, next) => {
-  console.error(err.stacck);
+  console.error('500 error stack: ');
+  console.error(JSON.stringify(err, null, 2));
   res.type('text/plain');
   res.status(500);
   res.send('500 - Server Error');
