@@ -1,0 +1,23 @@
+<ul>
+  {{#each items}}
+    {{! this is comment}}
+    <li>
+      {{name}} - {{value}}
+    </li>
+  {{/each}}
+</ul>
+
+<form action="/process" method="POST">
+  <input type="hidden" name="hush" val="hidden, but not secret">
+  <div>
+    <label for="yourname">Your name: </label>
+    <input type="text" id="name" name="name">
+  </div>
+  <div>
+    <label for="youremail">Your email: </label>
+    <input type="text" id="email" name="email">
+  </div>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
